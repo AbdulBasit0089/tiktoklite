@@ -1,19 +1,6 @@
 {
   "bindings": [
-    {
-      "authLevel": "anonymous",
-      "type": "httpTrigger",
-      "direction": "in",
-      "name": "req",
-      "methods": [
-        "get"
-      ],
-      "route": "api/videos/{id}/comments"
-    },
-    {
-      "type": "http",
-      "direction": "out",
-      "name": "res"
-    }
+    { "authLevel": "anonymous", "type": "httpTrigger", "direction": "in", "name": "req", "methods": ["get"], "route": "videos/{id}/comments" },
+    { "type": "http", "direction": "out", "name": "res" }
   ]
 }

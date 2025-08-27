@@ -1,19 +1,6 @@
 {
   "bindings": [
-    {
-      "authLevel": "anonymous",
-      "type": "httpTrigger",
-      "direction": "in",
-      "name": "req",
-      "methods": [
-        "post"
-      ],
-      "route": "api/getUploadSas"
-    },
-    {
-      "type": "http",
-      "direction": "out",
-      "name": "res"
-    }
+    { "authLevel": "anonymous", "type": "httpTrigger", "direction": "in", "name": "req", "methods": ["post"], "route": "getUploadSas" },
+    { "type": "http", "direction": "out", "name": "res" }
   ]
 }

@@ -1,19 +1,6 @@
 {
   "bindings": [
-    {
-      "authLevel": "anonymous",
-      "type": "httpTrigger",
-      "direction": "in",
-      "name": "req",
-      "methods": [
-        "post"
-      ],
-      "route": "api/videos/{id}/rate"
-    },
-    {
-      "type": "http",
-      "direction": "out",
-      "name": "res"
-    }
+    { "authLevel": "anonymous", "type": "httpTrigger", "direction": "in", "name": "req", "methods": ["post"], "route": "videos/{id}/rate" },
+    { "type": "http", "direction": "out", "name": "res" }
   ]
 }
