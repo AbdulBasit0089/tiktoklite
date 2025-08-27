@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="card">
+    <a href="/">&larr; Back</a>
+    <h2 id="vtitle"></h2>
+    <p class="small" id="vmeta"></p>
+    <video id="player" controls style="width:100%;max-width:800px;border-radius:12px;border:1px solid #1f2328"></video>
+  </div>
+
+  <div class="card">
+    <h3>Rate</h3>
+    <div class="row">
+      <select id="stars">
+        <option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option>
+      </select>
+      <button id="rateBtn">Submit rating</button>
+    </div>
+    <p class="small" id="rateMsg"></p>
+  </div>
+
+  <div class="card">
+    <h3>Comments</h3>
+    <div class="row">
+      <input id="commentText" placeholder="Add a comment"/>
+      <button id="commentBtn">Post</button>
+    </div>
+    <div id="comments"></div>
+  </div>
+
+<script>
+async function api(path, method='GET', body=null) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(path, opts);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+
+async function load(){
+  const v = await api('/api/videos/'+id);
+  document.getElementById('vtitle').textContent = v.title;
+  document.getElementById('vmeta').textContent = `${v.publisher} • ${v.genre} • ${v.ageRating} • ⭐ ${Number(v.avgRating||0).toFixed(1)}`;
+  document.getElementById('player').src = v.blobUrl;
+  const cs = await api('/api/videos/'+id+'/comments');
+  const list = document.getElementById('comments');
+  list.innerHTML='';
+  cs.items.forEach(c=>{
+    const p = document.createElement('p');
+    p.className='small';
+    p.textContent = `${c.userName||'User'}: ${c.text}`;
+    list.appendChild(p);
+  });
+}
+document.getElementById('commentBtn').onclick = async()=>{
+  const t = document.getElementById('commentText').value.trim();
+  if(!t) return;
+  await api('/api/videos/'+id+'/comments','POST',{text:t});
+  document.getElementById('commentText').value='';
+  load();
+};
+document.getElementById('rateBtn').onclick = async()=>{
+  const s = Number(document.getElementById('stars').value);
+  document.getElementById('rateMsg').textContent='Saving...';
+  await api('/api/videos/'+id+'/rate','POST',{stars:s});
+  document.getElementById('rateMsg').textContent='Thanks!';
+  load();
+};
+load();
+</script>
+</body>
+</html>
